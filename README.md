@@ -1,110 +1,141 @@
-# 🎹 KeyCheck - Piano Analysis App
+# 🎹 KeyCheck - AI Piano Analysis App
 
-A modern web application for analyzing piano condition using AI technology.
+A promotional website and admin dashboard for the KeyCheck piano analysis application.
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.7+
-- Modern web browser
-
-### Installation
+### Local Development
 
 1. **Install Python dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Start the backend server:**
+2. **Start the Flask server:**
    ```bash
    python3 app.py
    ```
-   The API will be available at `http://localhost:5001`
 
-3. **Start the frontend server:**
-   ```bash
-   python3 -m http.server 8000
+3. **Open the admin dashboard:**
    ```
-   The website will be available at `http://localhost:8000`
+   http://localhost:5001/admin.html
+   ```
 
-## 📱 Features
+4. **Enter admin token:** `8f1b4683929510d3c32b4420c196bf8b416f9a85a2ebd07412378abb511f457a`
 
-### Main Website (`index.html`)
-- **Responsive design** - Works on desktop and mobile
-- **Animated demo** - Shows the app user flow
-- **Preorder system** - Email collection with SQLite storage
-- **Modern UI** - Clean, professional design
+### Production Setup
 
-### Admin Dashboard (`admin.html`)
-- **Real-time stats** - Total preorders, daily signups, revenue
-- **Preorder management** - View all submitted emails
-- **Auto-refresh** - Updates every 30 seconds
-
-## 🗄️ Database
-
-The app uses SQLite (`keycheck.db`) to store:
-- Email addresses
-- Preorder prices
-- Timestamps
-- Status tracking
-
-## 🔧 API Endpoints
-
-- `POST /api/preorder` - Submit new preorder
-- `GET /api/preorders` - Get all preorders (admin)
-- `GET /api/stats` - Get statistics
-- `GET /health` - Health check
+1. **Set up Supabase database** (see [SUPABASE_SETUP.md](SUPABASE_SETUP.md))
+2. **Deploy to Netlify** with environment variables
+3. **Configure admin token** in Netlify dashboard
 
 ## 📁 Project Structure
 
 ```
 keycheck/
-├── index.html          # Main promotional website
-├── keycheck.html       # App mockup/demo
-├── admin.html          # Admin dashboard
-├── app.py             # Flask backend
-├── requirements.txt   # Python dependencies
-├── keycheck.db        # SQLite database (created automatically)
-└── images/           # App screenshots
+├── index.html              # Promotional website
+├── keycheck.html           # App mockup/demo
+├── admin.html              # Admin dashboard
+├── app.py                  # Flask backend (local dev)
+├── requirements.txt        # Python dependencies
+├── netlify/
+│   └── functions/          # Serverless functions
+│       ├── submit-preorder.js
+│       ├── get-preorders.js
+│       ├── shared-data.js
+│       └── package.json
+└── SUPABASE_SETUP.md       # Database setup guide
 ```
 
-## 🎯 Usage
+## 🗄️ Database
 
-1. **Visit the website:** `http://localhost:8000`
-2. **Test the preorder form** - Submit an email
-3. **View admin dashboard:** `http://localhost:8000/admin.html`
-4. **Check the database** - All emails are stored in SQLite
+- **Development:** SQLite (`keycheck.db`)
+- **Production:** Supabase PostgreSQL
 
-## 🔒 Security Notes
+## 🔧 Features
 
-- Email validation prevents invalid submissions
-- Duplicate email prevention
-- CORS enabled for local development
-- SQLite database is created automatically
+- **Promotional Website:** Modern, responsive design
+- **App Demo:** Interactive phone mockup with user flow
+- **Preorder System:** Email collection with validation
+- **Admin Dashboard:** Real-time preorder tracking
+- **Mobile Responsive:** Optimized for all devices
 
-## 🚀 Production Deployment
+## 📊 Admin Dashboard
 
-For production, consider:
-- **Static hosting:** Netlify, Vercel, GitHub Pages
-- **Backend hosting:** Heroku, DigitalOcean, AWS
-- **Database:** PostgreSQL for production scale
-- **HTTPS:** Required for production
+Access the admin dashboard to:
+- View total preorders and revenue
+- See today's signups
+- Monitor email submissions
+- Track conversion metrics
 
-## 📊 Monitoring
+## 🚀 Deployment
 
-The admin dashboard provides:
-- Total preorder count
-- Daily signup tracking
-- Revenue calculations
-- Real-time updates
+The app is designed for easy deployment on Netlify:
+
+1. **Connect GitHub repository**
+2. **Set environment variables:**
+   - `ADMIN_TOKEN` - Admin dashboard access
+   - `SUPABASE_URL` - Database connection
+   - `SUPABASE_ANON_KEY` - Database API key
+3. **Deploy automatically** on git push
+
+## 🔒 Security
+
+- **Token-based admin access**
+- **Email validation and deduplication**
+- **CORS protection**
+- **Input sanitization**
+
+## 📱 Mobile Support
+
+- **Responsive design** for all screen sizes
+- **Touch-friendly** interface
+- **Mobile-optimized** admin dashboard
+- **Progressive Web App** ready
+
+## 🎯 Tech Stack
+
+- **Frontend:** HTML5, CSS3, JavaScript
+- **Backend:** Python Flask (dev), Netlify Functions (prod)
+- **Database:** SQLite (dev), Supabase PostgreSQL (prod)
+- **Deployment:** Netlify
+- **Styling:** Custom CSS with modern design patterns
+
+## 📈 Analytics
+
+Track your preorder success:
+- **Total signups**
+- **Daily conversion rates**
+- **Revenue tracking**
+- **Email list growth**
 
 ## 🛠️ Development
 
-- **Backend:** Flask with SQLite
-- **Frontend:** Vanilla HTML/CSS/JavaScript
-- **Database:** SQLite (development) / PostgreSQL (production)
-- **Styling:** Custom CSS with responsive design
+### Adding New Features
+
+1. **Local development:** Use Flask server
+2. **Test thoroughly** on mobile and desktop
+3. **Update Netlify functions** for production
+4. **Deploy** via git push
+
+### Database Schema
+
+```sql
+preorders:
+├── id (SERIAL PRIMARY KEY)
+├── email (VARCHAR(255) UNIQUE)
+├── price (INTEGER)
+├── timestamp (TIMESTAMP WITH TIME ZONE)
+└── status (VARCHAR(50))
+```
+
+## 📞 Support
+
+For questions or issues:
+1. Check the [SUPABASE_SETUP.md](SUPABASE_SETUP.md) guide
+2. Review the deployment logs in Netlify
+3. Test locally with `python3 app.py`
 
 ---
 
-**Ready to launch!** 🎉
+**Ready to launch your piano analysis app!** 🎹✨
