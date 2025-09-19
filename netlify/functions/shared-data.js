@@ -7,25 +7,33 @@ const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-    console.error('Missing Supabase environment variables');
-}
+let supabase = null;
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+if (supabaseUrl && supabaseKey) {
+    supabase = createClient(supabaseUrl, supabaseKey);
+    console.log('Supabase client initialized');
+} else {
+    console.log('Supabase environment variables not set - using fallback mode');
+}
 
 // Read preorders from Supabase
 async function readDeployedData() {
+    if (!supabase) {
+        console.log('Supabase not configured - returning empty array');
+        return [];
+    }
+
     try {
         const { data, error } = await supabase
             .from('preorders')
             .select('*')
             .order('timestamp', { ascending: false });
-        
+
         if (error) {
             console.error('Supabase error:', error);
             return [];
         }
-        
+
         return data || [];
     } catch (error) {
         console.error('Error reading from Supabase:', error);
@@ -38,7 +46,14 @@ async function getPreorders() {
 }
 
 async function addPreorder(email, price) {
+    if (!supabase) {
+        console.error('Supabase not configured - cannot save preorder');
+        throw new Error('Database not configured');
+    }
+    
     try {
+        console.log('Attempting to add preorder:', email, price);
+        
         // Check for duplicate first
         const { data: existing, error: checkError } = await supabase
             .from('preorders')
@@ -46,7 +61,13 @@ async function addPreorder(email, price) {
             .eq('email', email.toLowerCase().trim())
             .single();
         
+        if (checkError && checkError.code !== 'PGRST116') {
+            console.error('Supabase check error:', checkError);
+            throw new Error('Database error');
+        }
+        
         if (existing) {
+            console.log('Email already exists:', email);
             throw new Error('Email already registered');
         }
         
@@ -65,16 +86,17 @@ async function addPreorder(email, price) {
         
         if (error) {
             console.error('Supabase insert error:', error);
-            throw new Error('Failed to save preorder');
+            throw new Error('Failed to save preorder: ' + error.message);
         }
         
+        console.log('Successfully saved preorder:', data);
         return data;
     } catch (error) {
         if (error.message === 'Email already registered') {
             throw error;
         }
         console.error('Error adding preorder:', error);
-        throw new Error('Failed to save preorder');
+        throw new Error('Failed to save preorder: ' + error.message);
     }
 }
 
@@ -84,7 +106,7 @@ async function getStats() {
     const today = new Date().toISOString().split('T')[0];
     const todayPreorders = preorders.filter(p => p.timestamp.startsWith(today)).length;
     const totalRevenue = preorders.reduce((sum, p) => sum + p.price, 0);
-    
+
     return {
         total_preorders: totalPreorders,
         today_preorders: todayPreorders,
