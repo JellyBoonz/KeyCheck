@@ -1,37 +1,34 @@
 // Shared data module for Netlify functions
-// This is a simple in-memory solution for demo purposes
+// This is a simple solution that works with Netlify's stateless nature
 
-let preorders = [];
+const fs = require('fs');
+const path = require('path');
 
-// Initialize with default data
-function initializeData() {
-    if (preorders.length === 0) {
-        preorders = [
-            {
-                "id": 2,
-                "email": "test@test.com",
-                "price": 24,
-                "timestamp": "2025-09-18 11:43:21.667151",
-                "status": "pending"
-            },
-            {
-                "id": 1,
-                "email": "test@example.com",
-                "price": 24,
-                "timestamp": "2025-09-18 11:42:06.888275",
-                "status": "pending"
-            }
-        ];
+// Get the deployed data file path
+function getDeployedDataPath() {
+    return path.join(__dirname, '..', '..', 'data', 'preorders.json');
+}
+
+// Read preorders from deployed file
+function readDeployedData() {
+    try {
+        const dataPath = getDeployedDataPath();
+        if (fs.existsSync(dataPath)) {
+            const data = fs.readFileSync(dataPath, 'utf8');
+            return JSON.parse(data);
+        }
+    } catch (error) {
+        console.error('Error reading deployed data:', error);
     }
+    return [];
 }
 
 function getPreorders() {
-    initializeData();
-    return preorders;
+    return readDeployedData();
 }
 
 function addPreorder(email, price) {
-    initializeData();
+    const preorders = readDeployedData();
     
     // Check for duplicate
     const existing = preorders.find(p => p.email.toLowerCase() === email.toLowerCase());
@@ -49,11 +46,15 @@ function addPreorder(email, price) {
     };
     
     preorders.push(newPreorder);
+    
+    // For now, just return the new preorder
+    // In a real implementation, you'd want to persist this data
+    // For demo purposes, we'll just return it
     return newPreorder;
 }
 
 function getStats() {
-    initializeData();
+    const preorders = readDeployedData();
     const totalPreorders = preorders.length;
     const today = new Date().toISOString().split('T')[0];
     const todayPreorders = preorders.filter(p => p.timestamp.startsWith(today)).length;
