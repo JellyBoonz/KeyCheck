@@ -2,9 +2,26 @@
 const fs = require('fs');
 const path = require('path');
 
-// Get data file path - always use the deployed data directory
+// Get data file path - use /tmp for Netlify functions
 function getDataPath() {
-    return path.join(__dirname, '..', '..', 'data', 'preorders.json');
+    return '/tmp/preorders.json';
+}
+
+// Initialize data from deployed file if /tmp is empty
+function initializeData() {
+    const tmpPath = '/tmp/preorders.json';
+    const deployedPath = path.join(__dirname, '..', '..', 'data', 'preorders.json');
+    
+    // If /tmp file doesn't exist, copy from deployed file
+    if (!fs.existsSync(tmpPath) && fs.existsSync(deployedPath)) {
+        try {
+            const deployedData = fs.readFileSync(deployedPath, 'utf8');
+            fs.writeFileSync(tmpPath, deployedData);
+            console.log('Initialized /tmp/preorders.json from deployed file');
+        } catch (error) {
+            console.error('Error initializing data:', error);
+        }
+    }
 }
 
 // Read preorders from file
@@ -72,6 +89,9 @@ exports.handler = async (event, context) => {
             };
         }
 
+        // Initialize data from deployed file
+        initializeData();
+        
         // Get preorders
         const preorders = readPreorders();
 
