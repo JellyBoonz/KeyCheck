@@ -1,0 +1,2440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyCheck - AI-Powered Piano Condition Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1E88E5;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #1E88E5;
+        }
+
+        .cta-button {
+            background: #1E88E5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #333;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            z-index: 1000;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .mobile-nav li {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 0.75rem 0;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+        }
+
+        .mobile-nav a:hover {
+            color: #1E88E5;
+        }
+
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #F7F3EB 0%, #E8F4FD 100%);
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #1E88E5;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 3rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero .cta-button {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: #1E88E5;
+            border: 2px solid #1E88E5;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .secondary-button:hover {
+            background: #1E88E5;
+            color: white;
+        }
+
+        /* App Showcase */
+        .app-showcase {
+            padding: 4rem 0;
+            background: #fff;
+        }
+
+        .showcase-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .showcase-text h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .showcase-text p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: #2E7D32;
+            font-weight: bold;
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background: #000;
+            border-radius: 30px;
+            padding: 8px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F3EB;
+            border-radius: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-content {
+            padding: 2rem;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .screen-content h3 {
+            font-size: 1.5rem;
+            color: #1E88E5;
+            margin-bottom: 1rem;
+        }
+
+        .screen-content p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .score-display {
+            width: 80px;
+            height: 80px;
+            border: 4px solid #2E7D32;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            background: white;
+        }
+
+        .score-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .score-total {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 1rem;
+        }
+
+        /* Animated Demo Section */
+        .demo-section {
+            padding: 4rem 0;
+            background: #f8f9fa;
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .demo-text h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-text p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .demo-phone {
+            width: 250px;
+            height: 500px;
+            background: #000;
+            border-radius: 25px;
+            padding: 6px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .demo-pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .demo-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-dot.active {
+            background: #2E7D32;
+            transform: scale(1.2);
+        }
+
+        .demo-dot:hover {
+            background: #4CAF50;
+        }
+
+        /* Mobile pagination dots */
+        @media (max-width: 768px) {
+            .demo-pagination {
+                margin-top: 1rem;
+                gap: 6px;
+            }
+
+            .demo-dot {
+                width: 6px;
+                height: 6px;
+            }
+
+            .demo-dot.active {
+                transform: scale(1.3);
+            }
+        }
+
+        .demo-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F3EB;
+            border-radius: 19px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #F7F3EB;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            overflow: hidden;
+        }
+
+        .demo-slide.active {
+            opacity: 1;
+        }
+
+        .demo-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .demo-home-indicator {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 67px;
+            height: 2.5px;
+            background: #000;
+            border-radius: 1.5px;
+        }
+
+        /* Screen 1: Onboarding Demo */
+        .demo-onboarding {
+            padding: 40px 20px 20px;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .demo-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E88E5;
+            margin-bottom: 4px;
+        }
+
+        .demo-tagline {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .demo-subtitle {
+            font-size: 10px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .demo-piano-illustration {
+            width: 80px;
+            height: 40px;
+            margin: 15px auto 25px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40'%3E%3Crect x='5' y='10' width='8' height='25' fill='white' stroke='%23333' stroke-width='0.5'/%3E%3Crect x='13' y='10' width='8' height='25' fill='white' stroke='%23333' stroke-width='0.5'/%3E%3Crect x='21' y='10' width='8' height='25' fill='white' stroke='%23333' stroke-width='0.5'/%3E%3Crect x='29' y='10' width='8' height='25' fill='white' stroke='%23333' stroke-width='0.5'/%3E%3Crect x='37' y='10' width='8' height='25' fill='white' stroke='%23333' stroke-width='0.5'/%3E%3Crect x='45' y='10' width='8' height='25' fill='white' stroke='%23333' stroke-width='0.5'/%3E%3Crect x='53' y='10' width='8' height='25' fill='white' stroke='%23333' stroke-width='0.5'/%3E%3Crect x='10' y='10' width='5' height='15' fill='%23333'/%3E%3Crect x='18' y='10' width='5' height='15' fill='%23333'/%3E%3Crect x='34' y='10' width='5' height='15' fill='%23333'/%3E%3Crect x='42' y='10' width='5' height='15' fill='%23333'/%3E%3Crect x='50' y='10' width='5' height='15' fill='%23333'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .demo-primary-btn {
+            background: #1E88E5;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .demo-secondary-btn {
+            background: none;
+            color: #1E88E5;
+            border: none;
+            font-size: 9px;
+            font-weight: 500;
+            text-decoration: underline;
+            margin-bottom: 15px;
+        }
+
+        .demo-trust-line {
+            font-size: 8px;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Screen 2: Photo Capture Demo */
+        .demo-photo-capture {
+            padding: 30px 12px 12px;
+        }
+
+        .demo-screen-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .demo-photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .demo-photo-placeholder {
+            aspect-ratio: 1;
+            background: white;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6px;
+        }
+
+        .demo-camera-icon {
+            width: 12px;
+            height: 12px;
+            background: #ddd;
+            border-radius: 50%;
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        .demo-camera-icon::after {
+            content: "📷";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6px;
+        }
+
+        .demo-photo-label {
+            font-size: 6px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1px;
+        }
+
+        .demo-photo-caption {
+            font-size: 5px;
+            color: #666;
+        }
+
+        /* Screen 3: Analyzing Demo */
+        .demo-analyzing {
+            padding: 30px 12px 12px;
+            text-align: center;
+        }
+
+        .demo-progress-circle {
+            width: 45px;
+            height: 45px;
+            border: 3px solid #e0e0e0;
+            border-top: 3px solid #1E88E5;
+            border-radius: 50%;
+            margin: 15px auto 12px;
+            animation: spin 2s linear infinite;
+        }
+
+        .demo-analyzing-text {
+            font-size: 10px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .demo-checklist {
+            text-align: left;
+            max-width: 100px;
+            margin: 0 auto 20px;
+        }
+
+        .demo-checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 6px;
+            color: #666;
+        }
+
+        .demo-check-icon {
+            width: 6px;
+            height: 6px;
+            background: #2E7D32;
+            border-radius: 50%;
+            margin-right: 4px;
+            position: relative;
+        }
+
+        .demo-check-icon::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 4px;
+        }
+
+        .demo-cancel-btn {
+            background: none;
+            border: 1px solid #ddd;
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 6px;
+        }
+
+        /* Screen 4: Report Demo */
+        .demo-report {
+            padding: 30px 12px 12px;
+        }
+
+        .demo-score-section {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .demo-score-circle {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2E7D32;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 6px;
+            background: white;
+        }
+
+        .demo-score-number {
+            font-size: 10px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .demo-score-total {
+            font-size: 6px;
+            color: #666;
+        }
+
+        .demo-score-label {
+            font-size: 8px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 3px;
+        }
+
+        .demo-verdict {
+            font-size: 6px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .demo-report-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .demo-report-card {
+            background: white;
+            padding: 6px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .demo-card-title {
+            font-size: 5px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .demo-card-status {
+            font-size: 6px;
+            font-weight: 500;
+        }
+
+        .demo-card-status.good {
+            color: #2E7D32;
+        }
+
+        .demo-card-status.warning {
+            color: #F2B63A;
+        }
+
+        .demo-repair-estimate {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-estimate-title {
+            font-size: 6px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .demo-estimate-range {
+            font-size: 8px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .demo-report-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .demo-primary-btn-small {
+            background: #1E88E5;
+            color: white;
+            padding: 6px;
+            border: none;
+            border-radius: 8px;
+            font-size: 7px;
+            font-weight: 600;
+        }
+
+        /* Screen 5: Detail Report Demo */
+        .demo-detail {
+            padding: 25px 12px 15px;
+        }
+
+        .demo-detail-list {
+            margin-bottom: 8px;
+        }
+
+        .demo-detail-item {
+            background: white;
+            padding: 4px;
+            border-radius: 4px;
+            margin-bottom: 3px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .demo-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .demo-detail-title {
+            font-size: 6px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .demo-detail-severity {
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-size: 5px;
+            font-weight: 500;
+        }
+
+        .demo-severity-good {
+            background: #E8F5E8;
+            color: #2E7D32;
+        }
+
+        .demo-severity-warning {
+            background: #FFF8E1;
+            color: #F57F17;
+        }
+
+        .demo-severity-needs {
+            background: #FFEBEE;
+            color: #D32F2F;
+        }
+
+        .demo-detail-description {
+            font-size: 5px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .demo-detail-photo {
+            width: 20px;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .demo-detail-photo::after {
+            content: "📷";
+            font-size: 8px;
+            opacity: 0.7;
+        }
+
+        .demo-share-section {
+            margin-bottom: 6px;
+        }
+
+        .demo-share-buttons {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+
+        .demo-share-btn {
+            flex: 1;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 4px;
+            border-radius: 6px;
+            font-size: 6px;
+        }
+
+        .demo-reserve-btn {
+            background: #2E7D32;
+            color: white;
+            padding: 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 6px;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+
+        /* Preorder Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .modal-form {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1E88E5;
+        }
+
+        .form-input.error {
+            border-color: #D32F2F;
+        }
+
+        .error-message {
+            color: #D32F2F;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-primary {
+            background: #1E88E5;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: #1976D2;
+        }
+
+        .modal-btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .modal-btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 1rem;
+            background: #E8F5E8;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .success-message h3 {
+            color: #2E7D32;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message p {
+            color: #2E7D32;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile optimizations for modal */
+        @media (max-width: 480px) {
+            .modal {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .modal-title {
+                font-size: 1.3rem;
+            }
+
+            .modal-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* AI Section */
+        .ai-section {
+            background: linear-gradient(135deg, #1E88E5 0%, #1976D2 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .ai-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .ai-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .ai-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .ai-feature h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-feature p {
+            opacity: 0.9;
+        }
+
+        /* User Flow Visualization */
+        .user-flow {
+            padding: 4rem 0;
+            background: #f8f9fa;
+        }
+
+        .user-flow h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 3rem;
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .flow-step {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: #1E88E5;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: #666;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 4rem 0;
+            background: #fff;
+            text-align: center;
+        }
+
+        .pricing h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .pricing p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, #1E88E5 0%, #1976D2 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(30, 136, 229, 0.3);
+        }
+
+        .pricing-card h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .price-period {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        .pricing-features li::before {
+            content: "✓";
+            margin-right: 0.5rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 4rem 0;
+            background: #f8f9fa;
+        }
+
+        .testimonials h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 3rem;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .testimonial-role {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #1E88E5;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #1E88E5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #555;
+            padding-top: 1rem;
+            text-align: center;
+            color: #ccc;
+        }
+
+        /* Mobile-First Responsive Design */
+
+        /* Base styles are mobile-first */
+        .container {
+            padding: 0 16px;
+        }
+
+        .hero {
+            padding: 6rem 0 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero .description {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero .cta-button {
+            width: 100%;
+            max-width: 300px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .hero .secondary-button {
+            width: 100%;
+            max-width: 300px;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+        }
+
+        .showcase-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .demo-container {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .phone-mockup {
+            width: 250px;
+            height: 500px;
+        }
+
+        .demo-phone {
+            width: 200px;
+            height: 400px;
+        }
+
+        /* Mobile-specific optimizations */
+
+        /* Pricing section mobile buttons */
+        .pricing-card .cta-button {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Sticky mobile CTA button */
+        .mobile-sticky-cta {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .mobile-sticky-cta .cta-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero .description {
+                font-size: 0.9rem;
+            }
+
+            .demo-phone {
+                width: 180px;
+                height: 360px;
+            }
+
+            .phone-mockup {
+                width: 220px;
+                height: 440px;
+            }
+
+            .demo-text h2 {
+                font-size: 2rem;
+            }
+
+            .demo-text p {
+                font-size: 1rem;
+            }
+
+            .pricing-card {
+                padding: 2rem;
+            }
+
+            .pricing-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .price {
+                font-size: 2.5rem;
+            }
+        }
+
+        .flow-steps {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .ai-features {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .testimonial-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .footer-content {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Tablet styles */
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+
+            .hero {
+                padding: 8rem 0 4rem;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.4rem;
+            }
+
+            .hero .description {
+                font-size: 1.1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .showcase-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+            }
+
+            .demo-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+            }
+
+            .phone-mockup {
+                width: 300px;
+                height: 600px;
+            }
+
+            .demo-phone {
+                width: 250px;
+                height: 500px;
+            }
+
+            .flow-steps {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .ai-features {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .testimonial-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.5rem;
+            }
+
+            .flow-steps {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2rem;
+            }
+
+            .ai-features {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+
+            .testimonial-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* Large desktop styles */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1200px;
+            }
+        }
+
+        /* Navigation responsive behavior */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            /* Hide ALL buttons from top navigation on mobile */
+            nav .cta-button {
+                display: none;
+            }
+
+            /* Show sticky mobile CTA */
+            .mobile-sticky-cta {
+                display: block;
+            }
+
+            /* Add bottom padding to prevent content overlap */
+            body {
+                padding-bottom: 80px;
+            }
+        }
+
+        /* Touch-friendly interactions */
+        @media (hover: none) and (pointer: coarse) {
+
+            .cta-button,
+            .secondary-button,
+            .demo-primary-btn,
+            .demo-secondary-btn {
+                min-height: 44px;
+                min-width: 44px;
+                padding: 12px 20px;
+            }
+
+            .nav-links a {
+                padding: 12px 16px;
+            }
+
+            /* Ensure mobile buttons are easily tappable */
+            .hero .cta-button,
+            .pricing-card .cta-button {
+                min-height: 48px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">KeyCheck</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+            </ul>
+            <button class="cta-button" onclick="openPreorderModal()">Reserve Early Access - $24</button>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+        <div class="mobile-nav" id="mobileNav">
+            <ul>
+                <li><a href="#features" onclick="closeMobileMenu()">Features</a></li>
+                <li><a href="#how-it-works" onclick="closeMobileMenu()">How It Works</a></li>
+                <li><a href="#pricing" onclick="closeMobileMenu()">Pricing</a></li>
+                <li><a href="#testimonials" onclick="closeMobileMenu()">Testimonials</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="fade-in-up">AI-Powered Piano Analysis</h1>
+            <p class="subtitle fade-in-up">Find out what your piano is really worth—in minutes, not weeks.
+            </p>
+            <p class="description fade-in-up">Snap 4 photos, get a detailed analysis powered by advanced AI technology.
+                Avoid hidden repair costs and make informed decisions.</p>
+            <div class="hero-buttons fade-in-up">
+                <button class="cta-button" onclick="openPreorderModal()">Reserve Early Access - $24</button>
+                <button class="secondary-button" onclick="scrollToFeatures()">Learn More</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Showcase -->
+    <section class="app-showcase" id="features">
+        <div class="container">
+            <div class="showcase-content">
+                <div class="showcase-text">
+                    <h2>Professional Analysis in Your Pocket</h2>
+                    <p>KeyCheck uses advanced AI technology to analyze piano condition from just 4 photos. Get the same
+                        level of expertise that would normally require hiring a professional technician.</p>
+                    <ul class="feature-list">
+                        <li>Instant condition scoring (0-100)</li>
+                        <li>Detailed component analysis</li>
+                        <li>Estimated value range</li>
+                        <li>Professional PDF reports</li>
+                        <li>Expert-level accuracy</li>
+                    </ul>
+                </div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="screen-content">
+                            <h3>Your Piano Score</h3>
+                            <div class="score-display">
+                                <div class="score-number">87</div>
+                                <div class="score-total">/100</div>
+                            </div>
+                            <div class="score-label">Great Condition</div>
+                            <p>Excellent condition - ready to enjoy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animated Demo Section -->
+    <section class="demo-section">
+        <div class="container">
+            <div class="demo-container">
+                <div class="demo-text">
+                    <h2>See KeyCheck in Action</h2>
+                    <p>Watch how our AI analyzes your piano photos in real-time, providing instant professional insights
+                        that would normally take hours and cost hundreds of dollars.</p>
+                    <ul class="feature-list">
+                        <li>4-step photo capture process</li>
+                        <li>Real-time AI analysis</li>
+                        <li>Instant condition scoring</li>
+                        <li>Professional report generation</li>
+                    </ul>
+                </div>
+                <div class="demo-phone">
+                    <div class="demo-screen">
+                        <!-- Slide 1: Onboarding -->
+                        <div class="demo-slide active" id="slide1">
+                            <div class="demo-status-bar">
+                                <span>9:41</span>
+                                <span>🔋 100%</span>
+                            </div>
+                            <div class="demo-onboarding">
+                                <h1 class="demo-logo">KeyCheck</h1>
+                                <h2 class="demo-tagline">Snap. Analyze. Decide with confidence.</h2>
+                                <p class="demo-subtitle">Instant condition score for used pianos — get a clear report in
+                                    minutes.</p>
+                                <div class="demo-piano-illustration"></div>
+                                <button class="demo-primary-btn" onclick="openPreorderModal()">Reserve Early
+                                    Access</button>
+                                <button class="demo-secondary-btn">How it works</button>
+                                <p class="demo-trust-line">Created by an expert piano technician.</p>
+                            </div>
+                            <div class="demo-home-indicator"></div>
+                        </div>
+
+                        <!-- Slide 2: Photo Capture -->
+                        <div class="demo-slide" id="slide2">
+                            <div class="demo-status-bar">
+                                <span>9:41</span>
+                                <span>🔋 100%</span>
+                            </div>
+                            <div class="demo-photo-capture">
+                                <h2 class="demo-screen-title">Snap 4 photos</h2>
+                                <div class="demo-photo-grid">
+                                    <div class="demo-photo-placeholder">
+                                        <div class="demo-camera-icon"></div>
+                                        <div class="demo-photo-label">Full front view</div>
+                                        <div class="demo-photo-caption">frame + legs</div>
+                                    </div>
+                                    <div class="demo-photo-placeholder">
+                                        <div class="demo-camera-icon"></div>
+                                        <div class="demo-photo-label">Keyboard</div>
+                                        <div class="demo-photo-caption">keys close-up</div>
+                                    </div>
+                                    <div class="demo-photo-placeholder">
+                                        <div class="demo-camera-icon"></div>
+                                        <div class="demo-photo-label">Interior</div>
+                                        <div class="demo-photo-caption">strings / soundboard</div>
+                                    </div>
+                                    <div class="demo-photo-placeholder">
+                                        <div class="demo-camera-icon"></div>
+                                        <div class="demo-photo-label">Serial / Label</div>
+                                        <div class="demo-photo-caption">identification</div>
+                                    </div>
+                                </div>
+                                <button class="demo-primary-btn">Analyze</button>
+                            </div>
+                            <div class="demo-home-indicator"></div>
+                        </div>
+
+                        <!-- Slide 3: Analyzing -->
+                        <div class="demo-slide" id="slide3">
+                            <div class="demo-status-bar">
+                                <span>9:41</span>
+                                <span>🔋 100%</span>
+                            </div>
+                            <div class="demo-analyzing">
+                                <div class="demo-progress-circle"></div>
+                                <p class="demo-analyzing-text">Analyzing images — usually < 2 minutes</p>
+                                        <div class="demo-checklist">
+                                            <div class="demo-checklist-item">
+                                                <div class="demo-check-icon"></div>
+                                                Checking keys
+                                            </div>
+                                            <div class="demo-checklist-item">
+                                                <div class="demo-check-icon"></div>
+                                                Strings
+                                            </div>
+                                            <div class="demo-checklist-item">
+                                                <div class="demo-check-icon"></div>
+                                                Action
+                                            </div>
+                                            <div class="demo-checklist-item">
+                                                <div class="demo-check-icon"></div>
+                                                Finish
+                                            </div>
+                                            <div class="demo-checklist-item">
+                                                <div class="demo-check-icon"></div>
+                                                Serial
+                                            </div>
+                                        </div>
+                                        <button class="demo-cancel-btn">Cancel</button>
+                            </div>
+                            <div class="demo-home-indicator"></div>
+                        </div>
+
+                        <!-- Slide 4: Report -->
+                        <div class="demo-slide" id="slide4">
+                            <div class="demo-status-bar">
+                                <span>9:41</span>
+                                <span>🔋 100%</span>
+                            </div>
+                            <div class="demo-report">
+                                <div class="demo-score-section">
+                                    <div class="demo-score-circle">
+                                        <div class="demo-score-number">87</div>
+                                        <div class="demo-score-total">/ 100</div>
+                                    </div>
+                                    <div class="demo-score-label">Great</div>
+                                    <p class="demo-verdict">Excellent condition - ready to enjoy</p>
+                                </div>
+                                <div class="demo-report-cards">
+                                    <div class="demo-report-card">
+                                        <div class="demo-card-title">Keys</div>
+                                        <div class="demo-card-status good">Good</div>
+                                    </div>
+                                    <div class="demo-report-card">
+                                        <div class="demo-card-title">Action/Mechanics</div>
+                                        <div class="demo-card-status warning">Minor adjustment</div>
+                                    </div>
+                                    <div class="demo-report-card">
+                                        <div class="demo-card-title">Strings</div>
+                                        <div class="demo-card-status warning">Moderate corrosion</div>
+                                    </div>
+                                    <div class="demo-report-card">
+                                        <div class="demo-card-title">Hammers</div>
+                                        <div class="demo-card-status good">Good</div>
+                                    </div>
+                                </div>
+                                <div class="demo-repair-estimate">
+                                    <div class="demo-estimate-title">Estimated value range</div>
+                                    <div class="demo-estimate-range">$3,500 - $4,200</div>
+                                </div>
+                                <div class="demo-report-actions">
+                                    <button class="demo-primary-btn-small">Download PDF</button>
+                                </div>
+                            </div>
+                            <div class="demo-home-indicator"></div>
+                        </div>
+
+                        <!-- Slide 5: Detailed Report -->
+                        <div class="demo-slide" id="slide5">
+                            <div class="demo-status-bar">
+                                <span>9:41</span>
+                                <span>🔋 100%</span>
+                            </div>
+                            <div class="demo-detail">
+                                <h2 class="demo-screen-title">Detailed Report</h2>
+                                <div class="demo-detail-list">
+                                    <div class="demo-detail-item">
+                                        <div class="demo-detail-header">
+                                            <div class="demo-detail-title">Key Condition</div>
+                                            <div class="demo-detail-severity demo-severity-good">Good</div>
+                                        </div>
+                                        <p class="demo-detail-description">Keys show normal wear with no cracking or
+                                            sticking.</p>
+                                        <div class="demo-detail-photo"></div>
+                                    </div>
+                                    <div class="demo-detail-item">
+                                        <div class="demo-detail-header">
+                                            <div class="demo-detail-title">Action Regulation</div>
+                                            <div class="demo-detail-severity demo-severity-warning">Minor Issues</div>
+                                        </div>
+                                        <p class="demo-detail-description">Action is functional with minor regulation
+                                            recommended for optimal performance.</p>
+                                        <div class="demo-detail-photo"></div>
+                                    </div>
+                                    <div class="demo-detail-item">
+                                        <div class="demo-detail-header">
+                                            <div class="demo-detail-title">String Condition</div>
+                                            <div class="demo-detail-severity demo-severity-warning">Minor Issues</div>
+                                        </div>
+                                        <p class="demo-detail-description">Some bass strings show minor corrosion but
+                                            are serviceable.</p>
+                                        <div class="demo-detail-photo"></div>
+                                    </div>
+                                </div>
+                                <div class="demo-share-section">
+                                    <div class="demo-share-buttons">
+                                        <button class="demo-share-btn">SMS</button>
+                                        <button class="demo-share-btn">Email</button>
+                                        <button class="demo-share-btn">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="demo-home-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination Dots -->
+                <div class="demo-pagination">
+                    <div class="demo-dot active" data-slide="0"></div>
+                    <div class="demo-dot" data-slide="1"></div>
+                    <div class="demo-dot" data-slide="2"></div>
+                    <div class="demo-dot" data-slide="3"></div>
+                    <div class="demo-dot" data-slide="4"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Section -->
+    <section class="ai-section">
+        <div class="container">
+            <h2>Powered by Advanced AI Technology</h2>
+            <p>Our AI has been trained on thousands of piano assessments from professional technicians, giving you
+                expert-level analysis in seconds.</p>
+            <div class="ai-features">
+                <div class="ai-feature">
+                    <h3>Computer Vision</h3>
+                    <p>Analyzes visual condition of keys, strings, hammers, and finish with precision</p>
+                </div>
+                <div class="ai-feature">
+                    <h3>Pattern Recognition</h3>
+                    <p>Identifies wear patterns, damage, and maintenance needs automatically</p>
+                </div>
+                <div class="ai-feature">
+                    <h3>Expert Knowledge</h3>
+                    <p>Incorporates decades of professional piano technician expertise</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Flow -->
+    <section class="user-flow" id="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Snap Photos</div>
+                    <div class="step-description">Take 4 photos: front view, keyboard, interior, and serial number</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">AI Analysis</div>
+                    <div class="step-description">Our AI analyzes each component and identifies potential issues</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Get Results</div>
+                    <div class="step-description">Receive detailed condition report with score and recommendations</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Make Decision</div>
+                    <div class="step-description">Use professional insights to negotiate price or walk away</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>One-time payment for unlimited piano analyses</p>
+            <div class="pricing-card">
+                <h3>KeyCheck Pro</h3>
+                <div class="price">$24</div>
+                <div class="price-period">One-time payment</div>
+                <ul class="pricing-features">
+                    <li>Unlimited piano analyses</li>
+                    <li>Professional PDF reports</li>
+                    <li>AI-powered condition scoring</li>
+                    <li>Value estimation</li>
+                    <li>Component breakdown</li>
+                    <li>Expert recommendations</li>
+                </ul>
+                <button class="cta-button" onclick="openPreorderModal()"
+                    style="width: 100%; padding: 1rem; font-size: 1.1rem;">Reserve Early Access</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <h2>What Our Users Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="testimonial-text">"KeyCheck saved me from buying a piano with hidden $2,000 in repairs.
+                        The AI caught issues I never would have noticed."</div>
+                    <div class="testimonial-author">Sarah M.</div>
+                    <div class="testimonial-role">Piano Teacher</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">"As a piano dealer, this tool helps me provide transparent condition
+                        reports to my customers. Game changer!"</div>
+                    <div class="testimonial-author">Michael R.</div>
+                    <div class="testimonial-role">Piano Dealer</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">"The detailed analysis helped me negotiate a fair price. Worth every
+                        penny of the $24 investment."</div>
+                    <div class="testimonial-author">Jennifer L.</div>
+                    <div class="testimonial-role">Piano Buyer</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>KeyCheck</h3>
+                    <p>AI-powered piano condition analysis for buyers, sellers, and dealers.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 KeyCheck. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Preorder Modal -->
+    <div class="modal-overlay" id="preorderModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">We're finishing development — reserve your spot</h2>
+                <p class="modal-subtitle">Enter your email and we'll notify you when KeyCheck launches. Founding users
+                    will lock in the preorder price of $24.</p>
+            </div>
+
+            <div id="modalForm">
+                <div class="modal-form">
+                    <div class="form-group">
+                        <label for="emailInput" class="form-label">Email Address</label>
+                        <input type="email" id="emailInput" class="form-input" placeholder="your@email.com" required>
+                        <div id="emailError" class="error-message" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <button id="reserveBtn" class="modal-btn modal-btn-primary">Reserve my spot</button>
+                    <button id="cancelBtn" class="modal-btn modal-btn-secondary">Maybe later</button>
+                </div>
+            </div>
+
+            <div id="modalSuccess" style="display: none;">
+                <div class="success-message">
+                    <h3>You're reserved!</h3>
+                    <p id="successEmail"></p>
+                </div>
+                <div class="modal-buttons">
+                    <button id="closeSuccessBtn" class="modal-btn modal-btn-primary">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation
+        function scrollToPricing() {
+            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            mobileNav.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            mobileNav.classList.remove('active');
+            toggle.classList.remove('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function (event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (!mobileNav.contains(event.target) && !toggle.contains(event.target)) {
+                closeMobileMenu();
+            }
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = '#fff';
+                header.style.backdropFilter = 'none';
+            }
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', function () {
+            const animateElements = document.querySelectorAll('.flow-step, .testimonial, .ai-feature');
+            animateElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+
+            // Demo animation
+            startDemoAnimation();
+        });
+
+        // Demo animation function
+        function startDemoAnimation() {
+            const slides = ['slide1', 'slide2', 'slide3', 'slide4', 'slide5'];
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                // Hide all slides
+                slides.forEach(slideId => {
+                    document.getElementById(slideId).classList.remove('active');
+                });
+
+                // Show current slide
+                document.getElementById(slides[index]).classList.add('active');
+
+                // Update pagination dots
+                const dots = document.querySelectorAll('.demo-dot');
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            // Start the animation
+            showSlide(0);
+
+            // Change slide every 3 seconds
+            setInterval(nextSlide, 3000);
+
+            // Add click handlers to pagination dots
+            const dots = document.querySelectorAll('.demo-dot');
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    showSlide(currentSlide);
+                });
+            });
+        }
+
+        // Preorder Modal Functions
+        function openPreorderModal() {
+            // Check if user is already reserved
+            const isReserved = localStorage.getItem('keycheckReserved');
+
+            if (isReserved) {
+                showAlreadyReservedModal();
+            } else {
+                showPreorderForm();
+            }
+        }
+
+        function showPreorderForm() {
+            const modal = document.getElementById('preorderModal');
+            const form = document.getElementById('modalForm');
+            const success = document.getElementById('modalSuccess');
+
+            // Reset form
+            document.getElementById('emailInput').value = '';
+            document.getElementById('emailInput').classList.remove('error');
+            document.getElementById('emailError').style.display = 'none';
+
+            // Show form, hide success
+            form.style.display = 'block';
+            success.style.display = 'none';
+
+            // Show modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showAlreadyReservedModal() {
+            const modal = document.getElementById('preorderModal');
+            const form = document.getElementById('modalForm');
+            const success = document.getElementById('modalSuccess');
+            const successEmail = document.getElementById('successEmail');
+
+            // Hide form, show success with different message
+            form.style.display = 'none';
+            success.style.display = 'block';
+            successEmail.textContent = 'You\'re already reserved — check your email.';
+
+            // Show modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('preorderModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        async function submitReservation() {
+            const emailInput = document.getElementById('emailInput');
+            const email = emailInput.value.trim();
+            const errorDiv = document.getElementById('emailError');
+            const reserveBtn = document.getElementById('reserveBtn');
+
+            // Clear previous errors
+            emailInput.classList.remove('error');
+            errorDiv.style.display = 'none';
+
+            // Validate email
+            if (!email) {
+                showError('Please enter your email address.');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                showError('Please enter a valid email address.');
+                return;
+            }
+
+            // Disable button and show loading
+            reserveBtn.disabled = true;
+            reserveBtn.textContent = 'Reserving...';
+
+            try {
+                // Submit to production API
+                const apiUrl = window.location.hostname === 'localhost'
+                    ? 'http://localhost:5001/api/preorder'  // Development
+                    : '/.netlify/functions/submit-preorder'; // Production
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        price: 24
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Success - store in localStorage and show success
+                    localStorage.setItem('keycheckReserved', 'true');
+                    localStorage.setItem('keycheckEmail', email);
+                    showSuccess(email);
+                } else {
+                    // Handle specific error messages
+                    const errorMessage = result.error || 'Something went wrong. Please try again.';
+                    showError(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Unable to connect to server. Please make sure the backend is running.');
+            } finally {
+                // Re-enable button
+                reserveBtn.disabled = false;
+                reserveBtn.textContent = 'Reserve my spot';
+            }
+        }
+
+        function showError(message) {
+            const emailInput = document.getElementById('emailInput');
+            const errorDiv = document.getElementById('emailError');
+
+            emailInput.classList.add('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showSuccess(email) {
+            const form = document.getElementById('modalForm');
+            const success = document.getElementById('modalSuccess');
+            const successEmail = document.getElementById('successEmail');
+
+            // Hide form, show success
+            form.style.display = 'none';
+            success.style.display = 'block';
+            successEmail.textContent = `We'll email you at ${email}.`;
+        }
+
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function () {
+            // Modal event listeners
+            document.getElementById('reserveBtn').addEventListener('click', submitReservation);
+            document.getElementById('cancelBtn').addEventListener('click', closeModal);
+            document.getElementById('closeSuccessBtn').addEventListener('click', closeModal);
+
+            // Close modal when clicking outside
+            document.getElementById('preorderModal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('preorderModal');
+                    if (modal.classList.contains('active')) {
+                        closeModal();
+                    }
+                }
+            });
+
+            // Allow Enter key to submit form
+            document.getElementById('emailInput').addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    submitReservation();
+                }
+            });
+        });
+    </script>
+
+    <!-- Mobile Sticky CTA Button -->
+    <div class="mobile-sticky-cta">
+        <button class="cta-button" onclick="openPreorderModal()">Reserve Early Access - $24</button>
+    </div>
+</body>
+
+</html>
