@@ -46,8 +46,8 @@ exports.handler = async (event, context) => {
         }
 
         // Get preorders and stats using shared data
-        const preorders = getPreorders();
-        const stats = getStats();
+        const preorders = await getPreorders();
+        const stats = await getStats();
 
         return {
             statusCode: 200,

@@ -1,21 +1,16 @@
 // Shared data module for Netlify functions
 // This is a simple solution that works with Netlify's stateless nature
 
-const fs = require('fs');
-const path = require('path');
+const https = require('https');
 
-// Get the deployed data file path
-function getDeployedDataPath() {
-    return path.join(__dirname, '..', '..', 'data', 'preorders.json');
-}
-
-// Read preorders from deployed file
-function readDeployedData() {
+// Read preorders from deployed file via HTTP
+async function readDeployedData() {
     try {
-        const dataPath = getDeployedDataPath();
-        if (fs.existsSync(dataPath)) {
-            const data = fs.readFileSync(dataPath, 'utf8');
-            return JSON.parse(data);
+        const url = 'https://keycheck.netlify.app/data/preorders.json';
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            return data;
         }
     } catch (error) {
         console.error('Error reading deployed data:', error);
@@ -23,12 +18,12 @@ function readDeployedData() {
     return [];
 }
 
-function getPreorders() {
-    return readDeployedData();
+async function getPreorders() {
+    return await readDeployedData();
 }
 
-function addPreorder(email, price) {
-    const preorders = readDeployedData();
+async function addPreorder(email, price) {
+    const preorders = await readDeployedData();
     
     // Check for duplicate
     const existing = preorders.find(p => p.email.toLowerCase() === email.toLowerCase());
@@ -53,8 +48,8 @@ function addPreorder(email, price) {
     return newPreorder;
 }
 
-function getStats() {
-    const preorders = readDeployedData();
+async function getStats() {
+    const preorders = await readDeployedData();
     const totalPreorders = preorders.length;
     const today = new Date().toISOString().split('T')[0];
     const todayPreorders = preorders.filter(p => p.timestamp.startsWith(today)).length;

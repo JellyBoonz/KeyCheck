@@ -84,7 +84,7 @@ exports.handler = async (event, context) => {
 
         // Add new preorder using shared data
         try {
-            const newPreorder = addPreorder(email, priceNum);
+            const newPreorder = await addPreorder(email, priceNum);
 
             // Success response
             return {
