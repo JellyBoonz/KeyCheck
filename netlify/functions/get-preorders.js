@@ -2,9 +2,15 @@
 const fs = require('fs');
 const path = require('path');
 
-// Get data file path
+// Get data file path - use /tmp for Netlify functions
 function getDataPath() {
-    return path.join(__dirname, '..', '..', 'data', 'preorders.json');
+    // Try to use the data directory first, fallback to /tmp
+    const dataDir = path.join(__dirname, '..', '..', 'data');
+    if (fs.existsSync(dataDir)) {
+        return path.join(dataDir, 'preorders.json');
+    }
+    // Fallback to /tmp directory for Netlify functions
+    return '/tmp/preorders.json';
 }
 
 // Read preorders from file

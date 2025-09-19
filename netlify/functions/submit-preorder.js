@@ -10,16 +10,27 @@ function validateEmail(email) {
     return pattern.test(email);
 }
 
-// Get data file path
+// Get data file path - use /tmp for Netlify functions
 function getDataPath() {
-    return path.join(__dirname, '..', '..', 'data', 'preorders.json');
+    // Try to use the data directory first, fallback to /tmp
+    const dataDir = path.join(__dirname, '..', '..', 'data');
+    if (fs.existsSync(dataDir)) {
+        return path.join(dataDir, 'preorders.json');
+    }
+    // Fallback to /tmp directory for Netlify functions
+    return '/tmp/preorders.json';
 }
 
 // Ensure data directory exists
 function ensureDataDir() {
-    const dataDir = path.join(__dirname, '..', '..', 'data');
+    const dataPath = getDataPath();
+    const dataDir = path.dirname(dataPath);
     if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
+        try {
+            fs.mkdirSync(dataDir, { recursive: true });
+        } catch (error) {
+            console.error('Error creating data directory:', error);
+        }
     }
 }
 
@@ -42,10 +53,14 @@ function writePreorders(preorders) {
     try {
         ensureDataDir();
         const dataPath = getDataPath();
+        console.log('Writing to path:', dataPath);
         fs.writeFileSync(dataPath, JSON.stringify(preorders, null, 2));
+        console.log('Successfully wrote preorders');
         return true;
     } catch (error) {
         console.error('Error writing preorders:', error);
+        console.error('Error details:', error.message);
+        console.error('Stack:', error.stack);
         return false;
     }
 }
