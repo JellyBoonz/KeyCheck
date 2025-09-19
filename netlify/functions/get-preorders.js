@@ -1,50 +1,6 @@
 // Netlify serverless function for getting preorders (admin only)
-const fs = require('fs');
-const path = require('path');
+const { getPreorders, getStats } = require('./shared-data');
 
-// Get data file path - use /tmp for Netlify functions
-function getDataPath() {
-    return '/tmp/preorders.json';
-}
-
-// Initialize data from deployed file if /tmp is empty
-function initializeData() {
-    const tmpPath = '/tmp/preorders.json';
-    const deployedPath = path.join(__dirname, '..', '..', 'data', 'preorders.json');
-    
-    // If /tmp file doesn't exist, copy from deployed file
-    if (!fs.existsSync(tmpPath) && fs.existsSync(deployedPath)) {
-        try {
-            const deployedData = fs.readFileSync(deployedPath, 'utf8');
-            fs.writeFileSync(tmpPath, deployedData);
-            console.log('Initialized /tmp/preorders.json from deployed file');
-        } catch (error) {
-            console.error('Error initializing data:', error);
-        }
-    }
-}
-
-// Read preorders from file
-function readPreorders() {
-    try {
-        const dataPath = getDataPath();
-        console.log('Reading from path:', dataPath);
-        console.log('File exists:', fs.existsSync(dataPath));
-        if (fs.existsSync(dataPath)) {
-            const data = fs.readFileSync(dataPath, 'utf8');
-            console.log('File content length:', data.length);
-            const parsed = JSON.parse(data);
-            console.log('Parsed preorders count:', parsed.length);
-            return parsed;
-        } else {
-            console.log('File does not exist at:', dataPath);
-        }
-    } catch (error) {
-        console.error('Error reading preorders:', error);
-        console.error('Error details:', error.message);
-    }
-    return [];
-}
 
 exports.handler = async (event, context) => {
     // Handle CORS preflight requests
@@ -89,17 +45,9 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Initialize data from deployed file
-        initializeData();
-        
-        // Get preorders
-        const preorders = readPreorders();
-
-        // Calculate stats
-        const totalPreorders = preorders.length;
-        const today = new Date().toISOString().split('T')[0];
-        const todayPreorders = preorders.filter(p => p.timestamp.startsWith(today)).length;
-        const totalRevenue = preorders.reduce((sum, p) => sum + p.price, 0);
+        // Get preorders and stats using shared data
+        const preorders = getPreorders();
+        const stats = getStats();
 
         return {
             statusCode: 200,
@@ -109,11 +57,7 @@ exports.handler = async (event, context) => {
             body: JSON.stringify({
                 success: true,
                 preorders: preorders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)),
-                stats: {
-                    total_preorders: totalPreorders,
-                    today_preorders: todayPreorders,
-                    total_revenue: totalRevenue
-                }
+                stats: stats
             }),
         };
 
