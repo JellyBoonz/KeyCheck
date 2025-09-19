@@ -10,15 +10,9 @@ function validateEmail(email) {
     return pattern.test(email);
 }
 
-// Get data file path - use /tmp for Netlify functions
+// Get data file path - always use the deployed data directory
 function getDataPath() {
-    // Try to use the data directory first, fallback to /tmp
-    const dataDir = path.join(__dirname, '..', '..', 'data');
-    if (fs.existsSync(dataDir)) {
-        return path.join(dataDir, 'preorders.json');
-    }
-    // Fallback to /tmp directory for Netlify functions
-    return '/tmp/preorders.json';
+    return path.join(__dirname, '..', '..', 'data', 'preorders.json');
 }
 
 // Ensure data directory exists
