@@ -1,0 +1,11 @@
+{
+  "name": "keycheck",
+  "version": "1.0.0",
+  "description": "KeyCheck AI Piano Analysis App",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
