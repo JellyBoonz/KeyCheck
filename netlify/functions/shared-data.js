@@ -1,21 +1,36 @@
 // Shared data module for Netlify functions
-// This is a simple solution that works with Netlify's stateless nature
+// Uses Supabase PostgreSQL database
 
-const https = require('https');
+const { createClient } = require('@supabase/supabase-js');
 
-// Read preorders from deployed file via HTTP
+// Supabase configuration
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+    console.error('Missing Supabase environment variables');
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Read preorders from Supabase
 async function readDeployedData() {
     try {
-        const url = 'https://keycheck.netlify.app/data/preorders.json';
-        const response = await fetch(url);
-        if (response.ok) {
-            const data = await response.json();
-            return data;
+        const { data, error } = await supabase
+            .from('preorders')
+            .select('*')
+            .order('timestamp', { ascending: false });
+        
+        if (error) {
+            console.error('Supabase error:', error);
+            return [];
         }
+        
+        return data || [];
     } catch (error) {
-        console.error('Error reading deployed data:', error);
+        console.error('Error reading from Supabase:', error);
+        return [];
     }
-    return [];
 }
 
 async function getPreorders() {
@@ -23,29 +38,44 @@ async function getPreorders() {
 }
 
 async function addPreorder(email, price) {
-    const preorders = await readDeployedData();
-    
-    // Check for duplicate
-    const existing = preorders.find(p => p.email.toLowerCase() === email.toLowerCase());
-    if (existing) {
-        throw new Error('Email already registered');
+    try {
+        // Check for duplicate first
+        const { data: existing, error: checkError } = await supabase
+            .from('preorders')
+            .select('email')
+            .eq('email', email.toLowerCase().trim())
+            .single();
+        
+        if (existing) {
+            throw new Error('Email already registered');
+        }
+        
+        // Insert new preorder
+        const { data, error } = await supabase
+            .from('preorders')
+            .insert([
+                {
+                    email: email.toLowerCase().trim(),
+                    price: parseInt(price),
+                    status: 'pending'
+                }
+            ])
+            .select()
+            .single();
+        
+        if (error) {
+            console.error('Supabase insert error:', error);
+            throw new Error('Failed to save preorder');
+        }
+        
+        return data;
+    } catch (error) {
+        if (error.message === 'Email already registered') {
+            throw error;
+        }
+        console.error('Error adding preorder:', error);
+        throw new Error('Failed to save preorder');
     }
-    
-    // Add new preorder
-    const newPreorder = {
-        id: Date.now(),
-        email: email.toLowerCase().trim(),
-        price: parseInt(price),
-        timestamp: new Date().toISOString(),
-        status: 'pending'
-    };
-    
-    preorders.push(newPreorder);
-    
-    // For now, just return the new preorder
-    // In a real implementation, you'd want to persist this data
-    // For demo purposes, we'll just return it
-    return newPreorder;
 }
 
 async function getStats() {
