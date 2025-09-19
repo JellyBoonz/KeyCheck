@@ -17,12 +17,20 @@ function getDataPath() {
 function readPreorders() {
     try {
         const dataPath = getDataPath();
+        console.log('Reading from path:', dataPath);
+        console.log('File exists:', fs.existsSync(dataPath));
         if (fs.existsSync(dataPath)) {
             const data = fs.readFileSync(dataPath, 'utf8');
-            return JSON.parse(data);
+            console.log('File content length:', data.length);
+            const parsed = JSON.parse(data);
+            console.log('Parsed preorders count:', parsed.length);
+            return parsed;
+        } else {
+            console.log('File does not exist at:', dataPath);
         }
     } catch (error) {
         console.error('Error reading preorders:', error);
+        console.error('Error details:', error.message);
     }
     return [];
 }
