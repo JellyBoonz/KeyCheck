@@ -805,7 +805,7 @@
 
         /* Screen 5: Detail Report Demo */
         .demo-detail {
-            padding: 25px 12px 15px;
+            padding: 25px 12px 25px;
         }
 
         .demo-detail-list {
@@ -828,7 +828,7 @@
         }
 
         .demo-detail-title {
-            font-size: 6px;
+            font-size: 7px;
             font-weight: 600;
             color: #333;
         }
@@ -836,7 +836,7 @@
         .demo-detail-severity {
             padding: 1px 4px;
             border-radius: 4px;
-            font-size: 5px;
+            font-size: 6px;
             font-weight: 500;
         }
 
@@ -856,7 +856,7 @@
         }
 
         .demo-detail-description {
-            font-size: 5px;
+            font-size: 7px;
             color: #666;
             margin-bottom: 4px;
         }
@@ -880,7 +880,7 @@
         }
 
         .demo-share-section {
-            margin-bottom: 6px;
+            margin-bottom: 20px;
         }
 
         .demo-share-buttons {
@@ -1825,188 +1825,193 @@
                     <div class="demo-nav-arrow" id="prevSlide">‹</div>
                     <div class="demo-phone">
                         <div class="demo-screen">
-                        <!-- Slide 1: Onboarding -->
-                        <div class="demo-slide active" id="slide1">
-                            <div class="demo-status-bar">
-                                <span>9:41</span>
-                                <span>🔋 100%</span>
+                            <!-- Slide 1: Onboarding -->
+                            <div class="demo-slide active" id="slide1">
+                                <div class="demo-status-bar">
+                                    <span>9:41</span>
+                                    <span>🔋 100%</span>
+                                </div>
+                                <div class="demo-onboarding">
+                                    <h1 class="demo-logo">KeyCheck</h1>
+                                    <h2 class="demo-tagline">Snap. Analyze. Decide with confidence.</h2>
+                                    <p class="demo-subtitle">Instant condition score for used pianos — get a clear
+                                        report in
+                                        minutes.</p>
+                                    <div class="demo-piano-illustration"></div>
+                                    <button class="demo-primary-btn" onclick="openPreorderModal()">Reserve Early
+                                        Access</button>
+                                    <button class="demo-secondary-btn">How it works</button>
+                                    <p class="demo-trust-line">Created by an expert piano technician.</p>
+                                </div>
+                                <div class="demo-home-indicator"></div>
                             </div>
-                            <div class="demo-onboarding">
-                                <h1 class="demo-logo">KeyCheck</h1>
-                                <h2 class="demo-tagline">Snap. Analyze. Decide with confidence.</h2>
-                                <p class="demo-subtitle">Instant condition score for used pianos — get a clear report in
-                                    minutes.</p>
-                                <div class="demo-piano-illustration"></div>
-                                <button class="demo-primary-btn" onclick="openPreorderModal()">Reserve Early
-                                    Access</button>
-                                <button class="demo-secondary-btn">How it works</button>
-                                <p class="demo-trust-line">Created by an expert piano technician.</p>
-                            </div>
-                            <div class="demo-home-indicator"></div>
-                        </div>
 
-                        <!-- Slide 2: Photo Capture -->
-                        <div class="demo-slide" id="slide2">
-                            <div class="demo-status-bar">
-                                <span>9:41</span>
-                                <span>🔋 100%</span>
-                            </div>
-                            <div class="demo-photo-capture">
-                                <h2 class="demo-screen-title">Snap 4 photos</h2>
-                                <div class="demo-photo-grid">
-                                    <div class="demo-photo-placeholder">
-                                        <div class="demo-camera-icon"></div>
-                                        <div class="demo-photo-label">Full front view</div>
-                                        <div class="demo-photo-caption">frame + legs</div>
-                                    </div>
-                                    <div class="demo-photo-placeholder">
-                                        <div class="demo-camera-icon"></div>
-                                        <div class="demo-photo-label">Keyboard</div>
-                                        <div class="demo-photo-caption">keys close-up</div>
-                                    </div>
-                                    <div class="demo-photo-placeholder">
-                                        <div class="demo-camera-icon"></div>
-                                        <div class="demo-photo-label">Interior</div>
-                                        <div class="demo-photo-caption">strings / soundboard</div>
-                                    </div>
-                                    <div class="demo-photo-placeholder">
-                                        <div class="demo-camera-icon"></div>
-                                        <div class="demo-photo-label">Serial / Label</div>
-                                        <div class="demo-photo-caption">identification</div>
-                                    </div>
+                            <!-- Slide 2: Photo Capture -->
+                            <div class="demo-slide" id="slide2">
+                                <div class="demo-status-bar">
+                                    <span>9:41</span>
+                                    <span>🔋 100%</span>
                                 </div>
-                                <button class="demo-primary-btn">Analyze</button>
+                                <div class="demo-photo-capture">
+                                    <h2 class="demo-screen-title">Snap 4 photos</h2>
+                                    <div class="demo-photo-grid">
+                                        <div class="demo-photo-placeholder">
+                                            <div class="demo-camera-icon"></div>
+                                            <div class="demo-photo-label">Full front view</div>
+                                            <div class="demo-photo-caption">frame + legs</div>
+                                        </div>
+                                        <div class="demo-photo-placeholder">
+                                            <div class="demo-camera-icon"></div>
+                                            <div class="demo-photo-label">Keyboard</div>
+                                            <div class="demo-photo-caption">keys close-up</div>
+                                        </div>
+                                        <div class="demo-photo-placeholder">
+                                            <div class="demo-camera-icon"></div>
+                                            <div class="demo-photo-label">Interior</div>
+                                            <div class="demo-photo-caption">strings / soundboard</div>
+                                        </div>
+                                        <div class="demo-photo-placeholder">
+                                            <div class="demo-camera-icon"></div>
+                                            <div class="demo-photo-label">Serial / Label</div>
+                                            <div class="demo-photo-caption">identification</div>
+                                        </div>
+                                    </div>
+                                    <button class="demo-primary-btn">Analyze</button>
+                                </div>
+                                <div class="demo-home-indicator"></div>
                             </div>
-                            <div class="demo-home-indicator"></div>
-                        </div>
 
-                        <!-- Slide 3: Analyzing -->
-                        <div class="demo-slide" id="slide3">
-                            <div class="demo-status-bar">
-                                <span>9:41</span>
-                                <span>🔋 100%</span>
+                            <!-- Slide 3: Analyzing -->
+                            <div class="demo-slide" id="slide3">
+                                <div class="demo-status-bar">
+                                    <span>9:41</span>
+                                    <span>🔋 100%</span>
+                                </div>
+                                <div class="demo-analyzing">
+                                    <div class="demo-progress-circle"></div>
+                                    <p class="demo-analyzing-text">Analyzing images — usually < 2 minutes</p>
+                                            <div class="demo-checklist">
+                                                <div class="demo-checklist-item">
+                                                    <div class="demo-check-icon"></div>
+                                                    Checking keys
+                                                </div>
+                                                <div class="demo-checklist-item">
+                                                    <div class="demo-check-icon"></div>
+                                                    Strings
+                                                </div>
+                                                <div class="demo-checklist-item">
+                                                    <div class="demo-check-icon"></div>
+                                                    Action
+                                                </div>
+                                                <div class="demo-checklist-item">
+                                                    <div class="demo-check-icon"></div>
+                                                    Finish
+                                                </div>
+                                                <div class="demo-checklist-item">
+                                                    <div class="demo-check-icon"></div>
+                                                    Serial
+                                                </div>
+                                            </div>
+                                            <button class="demo-cancel-btn">Cancel</button>
+                                </div>
+                                <div class="demo-home-indicator"></div>
                             </div>
-                            <div class="demo-analyzing">
-                                <div class="demo-progress-circle"></div>
-                                <p class="demo-analyzing-text">Analyzing images — usually < 2 minutes</p>
-                                        <div class="demo-checklist">
-                                            <div class="demo-checklist-item">
-                                                <div class="demo-check-icon"></div>
-                                                Checking keys
-                                            </div>
-                                            <div class="demo-checklist-item">
-                                                <div class="demo-check-icon"></div>
-                                                Strings
-                                            </div>
-                                            <div class="demo-checklist-item">
-                                                <div class="demo-check-icon"></div>
-                                                Action
-                                            </div>
-                                            <div class="demo-checklist-item">
-                                                <div class="demo-check-icon"></div>
-                                                Finish
-                                            </div>
-                                            <div class="demo-checklist-item">
-                                                <div class="demo-check-icon"></div>
-                                                Serial
-                                            </div>
-                                        </div>
-                                        <button class="demo-cancel-btn">Cancel</button>
-                            </div>
-                            <div class="demo-home-indicator"></div>
-                        </div>
 
-                        <!-- Slide 4: Report -->
-                        <div class="demo-slide" id="slide4">
-                            <div class="demo-status-bar">
-                                <span>9:41</span>
-                                <span>🔋 100%</span>
+                            <!-- Slide 4: Report -->
+                            <div class="demo-slide" id="slide4">
+                                <div class="demo-status-bar">
+                                    <span>9:41</span>
+                                    <span>🔋 100%</span>
+                                </div>
+                                <div class="demo-report">
+                                    <div class="demo-score-section">
+                                        <div class="demo-score-circle">
+                                            <div class="demo-score-number">87</div>
+                                            <div class="demo-score-total">/ 100</div>
+                                        </div>
+                                        <div class="demo-score-label">Great</div>
+                                        <p class="demo-verdict">Excellent condition - ready to enjoy</p>
+                                    </div>
+                                    <div class="demo-report-cards">
+                                        <div class="demo-report-card">
+                                            <div class="demo-card-title">Keys</div>
+                                            <div class="demo-card-status good">Good</div>
+                                        </div>
+                                        <div class="demo-report-card">
+                                            <div class="demo-card-title">Action/Mechanics</div>
+                                            <div class="demo-card-status warning">Minor adjustment</div>
+                                        </div>
+                                        <div class="demo-report-card">
+                                            <div class="demo-card-title">Strings</div>
+                                            <div class="demo-card-status warning">Moderate corrosion</div>
+                                        </div>
+                                        <div class="demo-report-card">
+                                            <div class="demo-card-title">Hammers</div>
+                                            <div class="demo-card-status good">Good</div>
+                                        </div>
+                                    </div>
+                                    <div class="demo-repair-estimate">
+                                        <div class="demo-estimate-title">Estimated value range</div>
+                                        <div class="demo-estimate-range">$3,500 - $4,200</div>
+                                    </div>
+                                    <div class="demo-report-actions">
+                                        <button class="demo-primary-btn-small">Download PDF</button>
+                                    </div>
+                                </div>
+                                <div class="demo-home-indicator"></div>
                             </div>
-                            <div class="demo-report">
-                                <div class="demo-score-section">
-                                    <div class="demo-score-circle">
-                                        <div class="demo-score-number">87</div>
-                                        <div class="demo-score-total">/ 100</div>
-                                    </div>
-                                    <div class="demo-score-label">Great</div>
-                                    <p class="demo-verdict">Excellent condition - ready to enjoy</p>
-                                </div>
-                                <div class="demo-report-cards">
-                                    <div class="demo-report-card">
-                                        <div class="demo-card-title">Keys</div>
-                                        <div class="demo-card-status good">Good</div>
-                                    </div>
-                                    <div class="demo-report-card">
-                                        <div class="demo-card-title">Action/Mechanics</div>
-                                        <div class="demo-card-status warning">Minor adjustment</div>
-                                    </div>
-                                    <div class="demo-report-card">
-                                        <div class="demo-card-title">Strings</div>
-                                        <div class="demo-card-status warning">Moderate corrosion</div>
-                                    </div>
-                                    <div class="demo-report-card">
-                                        <div class="demo-card-title">Hammers</div>
-                                        <div class="demo-card-status good">Good</div>
-                                    </div>
-                                </div>
-                                <div class="demo-repair-estimate">
-                                    <div class="demo-estimate-title">Estimated value range</div>
-                                    <div class="demo-estimate-range">$3,500 - $4,200</div>
-                                </div>
-                                <div class="demo-report-actions">
-                                    <button class="demo-primary-btn-small">Download PDF</button>
-                                </div>
-                            </div>
-                            <div class="demo-home-indicator"></div>
-                        </div>
 
-                        <!-- Slide 5: Detailed Report -->
-                        <div class="demo-slide" id="slide5">
-                            <div class="demo-status-bar">
-                                <span>9:41</span>
-                                <span>🔋 100%</span>
-                            </div>
-                            <div class="demo-detail">
-                                <h2 class="demo-screen-title">Detailed Report</h2>
-                                <div class="demo-detail-list">
-                                    <div class="demo-detail-item">
-                                        <div class="demo-detail-header">
-                                            <div class="demo-detail-title">Key Condition</div>
-                                            <div class="demo-detail-severity demo-severity-good">Good</div>
+                            <!-- Slide 5: Detailed Report -->
+                            <div class="demo-slide" id="slide5">
+                                <div class="demo-status-bar">
+                                    <span>9:41</span>
+                                    <span>🔋 100%</span>
+                                </div>
+                                <div class="demo-detail">
+                                    <h2 class="demo-screen-title">Detailed Report</h2>
+                                    <div class="demo-detail-list">
+                                        <div class="demo-detail-item">
+                                            <div class="demo-detail-header">
+                                                <div class="demo-detail-title">Key Condition</div>
+                                                <div class="demo-detail-severity demo-severity-good">Good</div>
+                                            </div>
+                                            <p class="demo-detail-description">Keys show normal wear with no cracking or
+                                                sticking.</p>
+                                            <div class="demo-detail-photo"></div>
                                         </div>
-                                        <p class="demo-detail-description">Keys show normal wear with no cracking or
-                                            sticking.</p>
-                                        <div class="demo-detail-photo"></div>
+                                        <div class="demo-detail-item">
+                                            <div class="demo-detail-header">
+                                                <div class="demo-detail-title">Action Regulation</div>
+                                                <div class="demo-detail-severity demo-severity-warning">Minor Issues
+                                                </div>
+                                            </div>
+                                            <p class="demo-detail-description">Action is functional with minor
+                                                regulation
+                                                recommended for optimal performance.</p>
+                                            <div class="demo-detail-photo"></div>
+                                        </div>
+                                        <div class="demo-detail-item">
+                                            <div class="demo-detail-header">
+                                                <div class="demo-detail-title">String Condition</div>
+                                                <div class="demo-detail-severity demo-severity-warning">Minor Issues
+                                                </div>
+                                            </div>
+                                            <p class="demo-detail-description">Some bass strings show minor corrosion
+                                                but
+                                                are serviceable.</p>
+                                            <div class="demo-detail-photo"></div>
+                                        </div>
                                     </div>
-                                    <div class="demo-detail-item">
-                                        <div class="demo-detail-header">
-                                            <div class="demo-detail-title">Action Regulation</div>
-                                            <div class="demo-detail-severity demo-severity-warning">Minor Issues</div>
-                                        </div>
-                                        <p class="demo-detail-description">Action is functional with minor regulation
-                                            recommended for optimal performance.</p>
-                                        <div class="demo-detail-photo"></div>
-                                    </div>
-                                    <div class="demo-detail-item">
-                                        <div class="demo-detail-header">
-                                            <div class="demo-detail-title">String Condition</div>
-                                            <div class="demo-detail-severity demo-severity-warning">Minor Issues</div>
-                                        </div>
-                                        <p class="demo-detail-description">Some bass strings show minor corrosion but
-                                            are serviceable.</p>
-                                        <div class="demo-detail-photo"></div>
+                                    <div class="demo-share-section">
+                                        <!-- <div class="demo-share-buttons">
+                                            <button class="demo-share-btn">SMS</button>
+                                            <button class="demo-share-btn">Email</button>
+                                            <button class="demo-share-btn">Save</button>
+                                        </div> -->
                                     </div>
                                 </div>
-                                <div class="demo-share-section">
-                                    <div class="demo-share-buttons">
-                                        <button class="demo-share-btn">SMS</button>
-                                        <button class="demo-share-btn">Email</button>
-                                        <button class="demo-share-btn">Save</button>
-                                    </div>
-                                </div>
+                                <div class="demo-home-indicator"></div>
                             </div>
-                            <div class="demo-home-indicator"></div>
-                        </div>
                         </div>
                     </div>
                     <div class="demo-nav-arrow" id="nextSlide">›</div>
